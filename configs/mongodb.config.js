@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-mongoose.connect(process.env.MONGO_DB_URL, {
+const connection=mongoose.connect('mongodb://localhost:27017/auth_db', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
@@ -9,3 +9,6 @@ mongoose.connect(process.env.MONGO_DB_URL, {
   console.log(err);
 })
 
+
+
+module.exports=connection

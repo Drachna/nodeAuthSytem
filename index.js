@@ -1,15 +1,39 @@
 const express = require('express')
 const createError = require('http-errors')
-const JWTAuthRoutes=require('./routes/JWTAuth.route')
+const passport = require('passport');
+const session = require('express-session');
+const cookieParser = require('cookie-parser')
+const MongoStore = require('connect-mongo')
+const authRoutes=require('./routes/LocalAuth')
 
-require('dotenv').config()
 require('./configs/mongodb.config')
-require('./configs/redis.config')
+require('dotenv').config()
+require('./utils/authStrategies/localStrategy');
+
+
 
 const app = express()
 app.use(express.json())
+app.use(cookieParser())
 
-app.use('/jwt/auth',JWTAuthRoutes)
+const sessionStore =  MongoStore.create({ mongoUrl: 'mongodb://localhost:27017/auth_db', collection: 'sessions' });
+
+app.use(session({
+  secret: process.env.COOKIE_SECRETE,
+  resave: false,
+  saveUninitialized: true,
+  store: sessionStore,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 
+  }
+}));
+
+app.use(cookieParser(process.env.COOKIE_SECRETE));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/auth',authRoutes)
 
 app.use(async(req,res,next)=>{
   next(createError.NotFound('This Route does not exists'))
