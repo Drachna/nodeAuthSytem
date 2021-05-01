@@ -1,6 +1,6 @@
 module.exports.authMiddleware = (req, res, next) => {
- if (req.isAuthenticated()) {
+ if (req.user) {
      return next()
  }
- return res.redirect('/login')
+ return res.status(401).send('Not Logged In');
 }

@@ -4,11 +4,11 @@ const passport = require('passport');
 const session = require('express-session');
 const cookieParser = require('cookie-parser')
 const MongoStore = require('connect-mongo')
-const authRoutes=require('./routes/LocalAuth')
+const authRoutes=require('./routes/facebookAuth.route')
 
 require('./configs/mongodb.config')
 require('dotenv').config()
-require('./utils/authStrategies/localStrategy');
+require('./utils/authStrategies/facebookAuthStrategy');
 
 
 
